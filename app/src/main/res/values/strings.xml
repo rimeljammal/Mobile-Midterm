@@ -1,3 +1,23 @@
 <resources>
+
     <string name="app_name">News</string>
+    <string name="search">Search</string>
+
+    <string-array name="news_types">
+        <item>Entertainment</item>
+        <item>Sports</item>
+        <item>General</item>
+        <item>Health</item>
+        <item>Science</item>
+        <item>Technology</item>
+        <item>Business</item>
+    </string-array>
+
+    <string-array name="news_countries">
+        <item>Great Britain</item>
+        <item>America</item>
+        <item>France</item>
+        <item>Italy</item>
+    </string-array>
+
 </resources>

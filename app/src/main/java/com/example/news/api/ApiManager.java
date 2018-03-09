@@ -1,5 +1,6 @@
 package com.example.news.api;
 
+import com.example.news.models.NewsApiResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,8 +28,11 @@ public class ApiManager {
 
     public ApiManager() {
         Gson gson = new GsonBuilder().create();
-        okHttpClient = new OkHttpClient.Builder().addNetworkInterceptor(new NewsInterceptor()).build();
-        Retrofit retrofit = new Retrofit.Builder()
+        okHttpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new NewsInterceptor())
+                .build();
+        Retrofit retrofit = new Retrofit
+                .Builder()
                 .baseUrl(base_url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
