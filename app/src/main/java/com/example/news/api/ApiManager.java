@@ -1,16 +1,19 @@
 package com.example.news.api;
 
+import com.example.news.models.ArticleItem;
 import com.example.news.models.NewsApiResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -24,20 +27,26 @@ public class ApiManager {
     private Retrofit retrofit;
     private NewsApiResponse newsApiResponse;
 
-    private final String base_url = "https://newsapi.org/v2/top-headlines?";
+    private final String base_url = "https://newsapi.org/v2/";
 
     public ApiManager() {
         Gson gson = new GsonBuilder().create();
-        okHttpClient = new OkHttpClient.Builder()
+        okHttpClient = new OkHttpClient
+                .Builder()
                 .addNetworkInterceptor(new NewsInterceptor())
                 .build();
-        Retrofit retrofit = new Retrofit
+        retrofit = new Retrofit
                 .Builder()
+                .client(okHttpClient)
                 .baseUrl(base_url)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         newsApiResponse = retrofit.create(NewsApiResponse.class);
+    }
+
+    public Call<List<ArticleItem>> getArticles(String country, String category) {
+        return newsApiResponse.getArticles(country, category);
     }
 
     private static class NewsInterceptor implements Interceptor {
@@ -48,10 +57,11 @@ public class ApiManager {
             HttpUrl originalUrl = request.url();
             HttpUrl modifiedUrl = originalUrl
                     .newBuilder()
-                    .addQueryParameter("APPID", "c9f44d63b1934d42bb97ba2891c0adab")
+                    .addQueryParameter("apiKey", "682f7044cfa84ea5a9da533e5060816a")
                     .build();
             Request modifiedRequest = request.newBuilder().url(modifiedUrl).build();
             return chain.proceed(modifiedRequest);
         }
     }
+
 }
