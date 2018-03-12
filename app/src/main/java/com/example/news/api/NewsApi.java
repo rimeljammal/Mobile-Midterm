@@ -15,4 +15,7 @@ public interface NewsApi {
     @GET("top-headlines")
     Call<ApiResponse> getArticles(@Query("country") String country, @Query("category") String category);
 
+    @GET("top-headlines")
+    Call<ApiResponse> getArticlesSearch(@Query("q") String q);
+
 }

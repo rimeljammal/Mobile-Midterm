@@ -48,6 +48,10 @@ public class ApiManager {
         return newsApi.getArticles(country, category);
     }
 
+    public Call<ApiResponse> getArticlesSearch(String toSearch) {
+        return newsApi.getArticlesSearch(toSearch);
+    }
+
     private static class NewsInterceptor implements Interceptor {
 
         @Override

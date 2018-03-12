@@ -6,16 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.news.R;
 import com.example.news.api.ApiManager;
@@ -33,6 +33,9 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private Spinner types, countries;
+    private ImageView imageView;
+    private EditText editText;
+    private TextView textView;
     private Button search;
     private String genre, location;
     private ArrayAdapter<CharSequence> types_adapter, countries_adapter;
@@ -56,6 +59,23 @@ public class MainActivity extends AppCompatActivity {
         countries_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         countries.setAdapter(countries_adapter);
 
+        editText = findViewById(R.id.editText);
+
+        View.OnClickListener listener2 = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String toSearch = editText.getText().toString();
+                getArticlesSearch(toSearch);
+
+                search.setVisibility(View.GONE);
+                types.setVisibility(View.GONE);
+                editText.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+                countries.setVisibility(View.GONE);
+                textView.setVisibility(View.GONE);
+            }
+        };
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,9 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 int country = countries.getSelectedItemPosition();
 
                 Context context = getApplicationContext();
-
-                Toast toast = Toast.makeText(context, type + " " + country, Toast.LENGTH_SHORT);
-                toast.show();
 
                 if (type == 0)
                     genre = "entertainment";
@@ -100,18 +117,45 @@ public class MainActivity extends AppCompatActivity {
 
                 search.setVisibility(View.GONE);
                 types.setVisibility(View.GONE);
+                editText.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
                 countries.setVisibility(View.GONE);
+                textView.setVisibility(View.GONE);
             }
         };
 
         search = findViewById(R.id.search);
         search.setOnClickListener(listener);
 
+        imageView = findViewById(R.id.imageView2);
+        imageView.setOnClickListener(listener2);
+
+        textView = findViewById(R.id.or);
+
     }
 
     public void onBackPressed() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void getArticlesSearch(String toSearch)  {
+        apiManager.getArticlesSearch(toSearch).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful()) {
+                    ApiResponse articles = (ApiResponse) response.body();
+                    if (articles != null) {
+                        showArticles(articles);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     public void getArticles(String country, String category) {
@@ -161,13 +205,13 @@ public class MainActivity extends AppCompatActivity {
             Context context = holder.itemView.getContext();
             ArticleItem articleItem = items.get(position);
 
-            String title = String.valueOf(articleItem.getTitle());
+            String title = articleItem.getTitle();
             holder.title.setText(title);
 
-            String description = String.valueOf(articleItem.getDescription());
+            String description = articleItem.getDescription();
             holder.description.setText(description);
 
-            String link = String.valueOf(articleItem.getURL());
+            String link = articleItem.getURL();
             holder.link.setText(link);
 
             String iconUrl = articleItem.getImageURL();
