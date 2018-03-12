@@ -1,5 +1,7 @@
 package com.example.news.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Rim on 10/03/2018.
  */
@@ -8,8 +10,12 @@ public class ArticleItem {
 
     private String title;
     private String description;
-    private String url;
-    private String urlToImage;
+
+    @SerializedName("url")
+    private String URL;
+
+    @SerializedName("urlToImage")
+    private String imageURL;
 
 
     public String getTitle() {
@@ -29,19 +35,19 @@ public class ArticleItem {
     }
 
     public String getURL() {
-        return url;
+        return URL;
     }
 
     public void setURL(String URL) {
-        this.url = URL;
+        this.URL = URL;
     }
 
     public String getImageURL() {
-        return urlToImage;
+        return imageURL;
     }
 
     public void setImageURL(String imageURL) {
-        this.urlToImage = imageURL;
+        this.imageURL = imageURL;
     }
 
 }

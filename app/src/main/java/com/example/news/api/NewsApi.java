@@ -1,13 +1,9 @@
 package com.example.news.api;
 
 import com.example.news.models.ApiResponse;
-import com.example.news.models.ArticleItem;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Query;
 
 /**

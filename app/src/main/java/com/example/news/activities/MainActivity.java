@@ -1,9 +1,12 @@
 package com.example.news.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,12 +97,21 @@ public class MainActivity extends AppCompatActivity {
                     genre = "business";
 
                 getArticles(location, genre);
+
+                search.setVisibility(View.GONE);
+                types.setVisibility(View.GONE);
+                countries.setVisibility(View.GONE);
             }
         };
 
         search = findViewById(R.id.search);
         search.setOnClickListener(listener);
 
+    }
+
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void getArticles(String country, String category) {
@@ -122,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showArticles(ApiResponse info) {
+
+        articlesRecyclerView = findViewById(R.id.list);
+        articlesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         List<ArticleItem> items = info.getArticles();
         ArticlesListAdapter adapter = new ArticlesListAdapter(items);
         articlesRecyclerView.setAdapter(adapter);
@@ -145,12 +160,16 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Context context = holder.itemView.getContext();
             ArticleItem articleItem = items.get(position);
+
             String title = String.valueOf(articleItem.getTitle());
             holder.title.setText(title);
+
             String description = String.valueOf(articleItem.getDescription());
             holder.description.setText(description);
+
             String link = String.valueOf(articleItem.getURL());
             holder.link.setText(link);
+
             String iconUrl = articleItem.getImageURL();
             Picasso.with(context).load(iconUrl).into(holder.image);
         }
