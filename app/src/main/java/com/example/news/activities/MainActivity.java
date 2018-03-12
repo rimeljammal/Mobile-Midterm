@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.example.news.R;
 import com.example.news.api.ApiManager;
-import com.example.news.models.Article;
+import com.example.news.models.ApiResponse;
 import com.example.news.models.ArticleItem;
 import com.squareup.picasso.Picasso;
 
@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         apiManager = new ApiManager();
-
 
         types = findViewById(R.id.type);
         types_adapter = ArrayAdapter.createFromResource(this, R.array.news_types, android.R.layout.simple_spinner_item);
@@ -104,11 +103,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getArticles(String country, String category) {
-        apiManager.getArticles(country, category).enqueue(new Callback<List<ArticleItem>>() {
+        apiManager.getArticles(country, category).enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<List<ArticleItem>> call, Response<List<ArticleItem>> response) {
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
-                    Article articles = (Article) response.body();
+                    ApiResponse articles = (ApiResponse) response.body();
                     if (articles != null) {
                         showArticles(articles);
                     }
@@ -116,13 +115,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<ArticleItem>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
 
             }
         });
     }
 
-    private void showArticles(Article info) {
+    private void showArticles(ApiResponse info) {
         List<ArticleItem> items = info.getArticles();
         ArticlesListAdapter adapter = new ArticlesListAdapter(items);
         articlesRecyclerView.setAdapter(adapter);

@@ -8,8 +8,8 @@ public class ArticleItem {
 
     private String title;
     private String description;
-    private String URL;
-    private String imageURL;
+    private String url;
+    private String urlToImage;
 
 
     public String getTitle() {
@@ -29,19 +29,19 @@ public class ArticleItem {
     }
 
     public String getURL() {
-        return URL;
+        return url;
     }
 
     public void setURL(String URL) {
-        this.URL = URL;
+        this.url = URL;
     }
 
     public String getImageURL() {
-        return imageURL;
+        return urlToImage;
     }
 
     public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+        this.urlToImage = imageURL;
     }
 
 }

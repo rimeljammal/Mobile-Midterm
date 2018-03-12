@@ -1,12 +1,11 @@
 package com.example.news.api;
 
+import com.example.news.models.ApiResponse;
 import com.example.news.models.ArticleItem;
-import com.example.news.models.NewsApiResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -25,7 +24,7 @@ public class ApiManager {
 
     private OkHttpClient okHttpClient;
     private Retrofit retrofit;
-    private NewsApiResponse newsApiResponse;
+    private NewsApi newsApi;
 
     private final String base_url = "https://newsapi.org/v2/";
 
@@ -42,11 +41,11 @@ public class ApiManager {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        newsApiResponse = retrofit.create(NewsApiResponse.class);
+        newsApi = retrofit.create(NewsApi.class);
     }
 
-    public Call<List<ArticleItem>> getArticles(String country, String category) {
-        return newsApiResponse.getArticles(country, category);
+    public Call<ApiResponse> getArticles(String country, String category) {
+        return newsApi.getArticles(country, category);
     }
 
     private static class NewsInterceptor implements Interceptor {
@@ -57,7 +56,7 @@ public class ApiManager {
             HttpUrl originalUrl = request.url();
             HttpUrl modifiedUrl = originalUrl
                     .newBuilder()
-                    .addQueryParameter("apiKey", "682f7044cfa84ea5a9da533e5060816a")
+                    .addQueryParameter("apiKey" , "682f7044cfa84ea5a9da533e5060816a")
                     .build();
             Request modifiedRequest = request.newBuilder().url(modifiedUrl).build();
             return chain.proceed(modifiedRequest);

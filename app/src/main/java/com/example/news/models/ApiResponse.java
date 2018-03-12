@@ -6,8 +6,7 @@ import java.util.List;
  * Created by Rim on 07/03/2018.
  */
 
-public class Article {
-
+public class ApiResponse {
 
     private List<ArticleItem> articles;
 
