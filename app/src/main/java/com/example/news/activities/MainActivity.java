@@ -33,7 +33,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private Spinner types, countries;
-    private ImageView imageView;
     private EditText editText;
     private TextView textView;
     private Button search;
@@ -61,26 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         editText = findViewById(R.id.editText);
 
-        View.OnClickListener listener2 = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String toSearch = editText.getText().toString();
-                getArticlesSearch(toSearch);
-
-                search.setVisibility(View.GONE);
-                types.setVisibility(View.GONE);
-                editText.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
-                countries.setVisibility(View.GONE);
-                textView.setVisibility(View.GONE);
-            }
-        };
-
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 int type = types.getSelectedItemPosition();
                 int country = countries.getSelectedItemPosition();
+                String toSearch = editText.getText().toString();
 
                 Context context = getApplicationContext();
 
@@ -113,12 +99,15 @@ public class MainActivity extends AppCompatActivity {
                 if (type == 6)
                     genre = "business";
 
-                getArticles(location, genre);
+                if(toSearch.equalsIgnoreCase(""))
+                    getArticles(location, genre);
+                else    {
+                    getBoth(toSearch, location, genre);
+                }
 
                 search.setVisibility(View.GONE);
                 types.setVisibility(View.GONE);
                 editText.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
                 countries.setVisibility(View.GONE);
                 textView.setVisibility(View.GONE);
             }
@@ -126,9 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
         search = findViewById(R.id.search);
         search.setOnClickListener(listener);
-
-        imageView = findViewById(R.id.imageView2);
-        imageView.setOnClickListener(listener2);
 
         textView = findViewById(R.id.or);
 
@@ -139,14 +125,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getArticlesSearch(String toSearch)  {
-        apiManager.getArticlesSearch(toSearch).enqueue(new Callback<ApiResponse>() {
+    public void getArticles(String country, String category) {
+        apiManager.getArticles(country, category).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
                     ApiResponse articles = (ApiResponse) response.body();
-                    if (articles != null) {
+                    if (articles.getCount() != 0) {
                         showArticles(articles);
+                    }else   {
+                        textView.setVisibility(View.VISIBLE);
+                        textView.setText("No articles available.");
                     }
                 }
             }
@@ -158,14 +147,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getArticles(String country, String category) {
-        apiManager.getArticles(country, category).enqueue(new Callback<ApiResponse>() {
+    public void getBoth(String q, String country, String category)  {
+        apiManager.getBoth(q, country, category).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                if (response.isSuccessful()) {
-                    ApiResponse articles = (ApiResponse) response.body();
-                    if (articles != null) {
+                if(response.isSuccessful()) {
+                    ApiResponse articles =(ApiResponse) response.body();
+                    if(articles.getCount() != 0)    {
                         showArticles(articles);
+                    }else   {
+                        textView.setVisibility(View.VISIBLE);
+                        textView.setText("No articles available.");
                     }
                 }
             }

@@ -10,6 +10,10 @@ public class ApiResponse {
 
     private List<ArticleItem> articles;
 
+    public int getCount()   {
+        return articles.size();
+    }
+
     public List<ArticleItem> getArticles()  {
         return articles;
     }

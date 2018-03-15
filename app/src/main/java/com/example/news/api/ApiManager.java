@@ -48,8 +48,8 @@ public class ApiManager {
         return newsApi.getArticles(country, category);
     }
 
-    public Call<ApiResponse> getArticlesSearch(String toSearch) {
-        return newsApi.getArticlesSearch(toSearch);
+    public Call<ApiResponse> getBoth(String q, String country, String category) {
+        return newsApi.getBoth(q, country, category);
     }
 
     private static class NewsInterceptor implements Interceptor {
